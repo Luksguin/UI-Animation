@@ -15,7 +15,8 @@ namespace ScreenSetup
     public class ScreenBase : MonoBehaviour
     {
         public ScreenType screenType;
-        public List<Transform> listOfObjects;
+        public List<Transform> listOfButtons;
+        public List<Typper> listOfPhrases;
         public bool startHide = false;
 
         [Header("Animations")]
@@ -44,18 +45,29 @@ namespace ScreenSetup
 
         public void ShowObjects()
         {
-            for(int i = 0; i < listOfObjects.Count; i++)
+            for(int i = 0; i < listOfButtons.Count; i++)
             {
-                var obj = listOfObjects[i];
+                var obj = listOfButtons[i];
 
                 obj.gameObject.SetActive(true);
                 obj.DOScale(0, animationDuration).From().SetDelay(i * delayBetweenObjects);
+            }
+
+            Invoke(nameof(ShowPhrases), delayBetweenObjects * listOfButtons.Count);
+        }
+
+        public void ShowPhrases()
+        {
+            for (int i = 0; i < listOfPhrases.Count; i++)
+            {
+                listOfPhrases[i].StartText();
             }
         }
 
         public void HideObjects()
         {
-            listOfObjects.ForEach(i => i.gameObject.SetActive(false)); 
+            listOfButtons.ForEach(i => i.gameObject.SetActive(false));
+            listOfPhrases.ForEach(i => i.DeleteText());
         }
     }
 }
