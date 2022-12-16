@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using NaughtyAttributes;
 using DG.Tweening;
 
@@ -10,20 +11,24 @@ namespace ScreenSetup
     {
         Panel,
         Info_Panel,
+        Ranking,
         Shop
     }
     public class ScreenBase : MonoBehaviour
     {
         public ScreenType screenType;
-        public List<Transform> listOfButtons;
+        public List<Transform> listOfObjects;
         public List<Typper> listOfPhrases;
+
+        public Image uiBackground;
+
         public bool startHide = false;
 
         [Header("Animations")]
         public float animationDuration;
         public float delayBetweenObjects;
 
-        private void Start()
+        private void Awake()
         {
             if (startHide)
             {
@@ -32,28 +37,29 @@ namespace ScreenSetup
         }
 
         [Button]
-        protected void Show()
+        public void Show()
         {
+            if (uiBackground != null) uiBackground.enabled = true;
             ShowObjects();
         }
 
         [Button]
-        protected void Hide()
+        public void Hide()
         {
             HideObjects();
         }
 
         public void ShowObjects()
         {
-            for(int i = 0; i < listOfButtons.Count; i++)
+            for(int i = 0; i < listOfObjects.Count; i++)
             {
-                var obj = listOfButtons[i];
+                var obj = listOfObjects[i];
 
                 obj.gameObject.SetActive(true);
                 obj.DOScale(0, animationDuration).From().SetDelay(i * delayBetweenObjects);
             }
 
-            Invoke(nameof(ShowPhrases), delayBetweenObjects * listOfButtons.Count);
+            Invoke(nameof(ShowPhrases), delayBetweenObjects * listOfObjects.Count);
         }
 
         public void ShowPhrases()
@@ -66,8 +72,9 @@ namespace ScreenSetup
 
         public void HideObjects()
         {
-            listOfButtons.ForEach(i => i.gameObject.SetActive(false));
+            listOfObjects.ForEach(i => i.gameObject.SetActive(false));
             listOfPhrases.ForEach(i => i.DeleteText());
+            if(uiBackground != null) uiBackground.enabled = false;
         }
     }
 }
