@@ -12,6 +12,12 @@ namespace ScreenSetup
         Panel,
         Info_Panel,
         Ranking,
+        Inventory,
+        Win,
+        Lose,
+        Facebook,
+        Missions,
+        Settings,
         Shop
     }
     public class ScreenBase : MonoBehaviour
@@ -40,6 +46,7 @@ namespace ScreenSetup
         public void Show()
         {
             if (uiBackground != null) uiBackground.enabled = true;
+            listOfPhrases.ForEach(i => i.DeleteText());
             ShowObjects();
         }
 
